@@ -12,11 +12,10 @@
       ]
     }
   ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
   "host_permissions": [
-    "https://api.steampowered.com/*",
-    "https://store.steampowered.com/*"
-  ],
-  "permissions": [
     "https://api.steampowered.com/*",
     "https://store.steampowered.com/*"
   ],

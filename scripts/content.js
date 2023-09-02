@@ -1,5 +1,4 @@
 const gamesParentElement = document.querySelector('.carousel_items');
-
 // Return null if game not found
 if (gamesParentElement) {
   const games = gamesParentElement.childNodes;
@@ -29,22 +28,18 @@ if (gamesParentElement) {
     };
     Object.assign(extraInfo.style, styling);
     const playerCountElement = document.createElement('p');
-    fetch(
-      `https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=${gameId}`,
-    )
-      .then((response) => response.json())
-      .then(({ response }) => {
-        const playerCount = response.player_count || 0;
+
+    chrome.runtime.sendMessage({ name: 'fetchPlayerCount', gameId }, (response) => {
+      const { count, isError } = response;
+      if (isError) {
+        playerCountElement.textContent = '🚫 No Data';
+      } else {
+        const playerCount = count || 0;
         playerCountElement.textContent = `👥 ${playerCount}`;
         extraInfo.appendChild(playerCountElement);
         extraInfo.appendChild(gameIdElement);
-      })
-      .catch((e) => {
-        console.error(e);
-        playerCountElement.textContent = '🚫 No Data';
-        extraInfo.appendChild(playerCountElement);
-        extraInfo.appendChild(gameIdElement);
-      });
+      }
+    });
 
     capsule.insertAdjacentElement('afterend', extraInfo);
   });
